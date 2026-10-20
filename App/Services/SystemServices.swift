@@ -172,7 +172,7 @@ struct SystemLANScanner: LANScanning {
         }
     }
 
-    func sweep(targets: [IPv4Address], ports: [UInt16], timeout: TimeInterval, progress: @escaping @MainActor (Int) -> Void) async -> [LANHost] {
+    func sweep(targets: [IPv4], ports: [UInt16], timeout: TimeInterval, progress: @escaping @MainActor (Int) -> Void) async -> [LANHost] {
         var hosts: [LANHost] = []
         var done = 0
         let batch = 16

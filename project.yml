@@ -37,11 +37,6 @@ targets:
         UIUserInterfaceStyle: Dark
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
-        UISupportedInterfaceOrientations~ipad:
-          - UIInterfaceOrientationPortrait
-          - UIInterfaceOrientationPortraitUpsideDown
-          - UIInterfaceOrientationLandscapeLeft
-          - UIInterfaceOrientationLandscapeRight
         ITSAppUsesNonExemptEncryption: false
         NSLocationWhenInUseUsageDescription: iOS 規定要有位置權限，App 才能讀取目前連線的 Wi-Fi 名稱與基地台位址。App 不會讀取或儲存你的位置。
         NSLocalNetworkUsageDescription: 用來尋找同一個 Wi-Fi 網段中的裝置，並測試它們開啟的連接埠。
@@ -60,7 +55,7 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.wifispectrum.ios
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
-        TARGETED_DEVICE_FAMILY: "1,2"
+        TARGETED_DEVICE_FAMILY: "1"
         ENABLE_PREVIEWS: YES
   WifiSpectrumTests:
     type: bundle.unit-test

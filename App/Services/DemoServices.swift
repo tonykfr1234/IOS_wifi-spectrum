@@ -10,12 +10,12 @@ enum DemoData {
         isWifi: true, isExpensive: false, isConstrained: false, supportsIPv6: true, hasDNS: true
     )
     static let hosts: [LANHost] = [
-        LANHost(address: IPv4Address("192.168.50.1")!, openPorts: [80, 443]),
-        LANHost(address: IPv4Address("192.168.50.10")!, openPorts: [80, 443, 22, 445]),
-        LANHost(address: IPv4Address("192.168.50.23")!, openPorts: [22]),
-        LANHost(address: IPv4Address("192.168.50.66")!, openPorts: [80]),
-        LANHost(address: IPv4Address("192.168.50.88")!, openPorts: [554]),
-        LANHost(address: IPv4Address("192.168.50.105")!, openPorts: [62078]),
+        LANHost(address: IPv4("192.168.50.1")!, openPorts: [80, 443]),
+        LANHost(address: IPv4("192.168.50.10")!, openPorts: [80, 443, 22, 445]),
+        LANHost(address: IPv4("192.168.50.23")!, openPorts: [22]),
+        LANHost(address: IPv4("192.168.50.66")!, openPorts: [80]),
+        LANHost(address: IPv4("192.168.50.88")!, openPorts: [554]),
+        LANHost(address: IPv4("192.168.50.105")!, openPorts: [62078]),
     ]
     static let services: [BonjourService] = [
         BonjourService(name: "ASUS RT-BE96U", type: "_http._tcp"),
@@ -67,7 +67,7 @@ struct DemoLANScanner: LANScanning {
 
     func browse(types: [String], for seconds: TimeInterval) async -> [BonjourService] { DemoData.services }
 
-    func sweep(targets: [IPv4Address], ports: [UInt16], timeout: TimeInterval, progress: @escaping @MainActor (Int) -> Void) async -> [LANHost] {
+    func sweep(targets: [IPv4], ports: [UInt16], timeout: TimeInterval, progress: @escaping @MainActor (Int) -> Void) async -> [LANHost] {
         for i in stride(from: 16, through: targets.count, by: 16) {
             if Task.isCancelled { break }
             await progress(i)

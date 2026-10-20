@@ -1,6 +1,6 @@
 import Foundation
 
-public struct IPv4Address: Hashable, Comparable, Sendable, CustomStringConvertible {
+public struct IPv4: Hashable, Comparable, Sendable, CustomStringConvertible {
     public let value: UInt32
 
     public init(_ value: UInt32) { self.value = value }
@@ -25,7 +25,7 @@ public struct IPv4Address: Hashable, Comparable, Sendable, CustomStringConvertib
         return a == 10 || (a == 172 && (16...31).contains(b)) || (a == 192 && b == 168)
     }
 
-    public static func < (l: IPv4Address, r: IPv4Address) -> Bool { l.value < r.value }
+    public static func < (l: IPv4, r: IPv4) -> Bool { l.value < r.value }
 }
 
 public enum SubnetError: Error, Equatable {
@@ -34,10 +34,10 @@ public enum SubnetError: Error, Equatable {
 
 /// IPv4 network maths for the subnet calculator and the LAN sweep.
 public struct Subnet: Equatable, Sendable {
-    public let address: IPv4Address
+    public let address: IPv4
     public let prefix: Int
 
-    public init(address: IPv4Address, prefix: Int) throws {
+    public init(address: IPv4, prefix: Int) throws {
         guard (0...32).contains(prefix) else { throw SubnetError.badPrefix }
         self.address = address
         self.prefix = prefix
@@ -47,27 +47,27 @@ public struct Subnet: Equatable, Sendable {
     public init(parsing text: String) throws {
         let t = text.trimmingCharacters(in: .whitespaces)
         let pieces = t.split(whereSeparator: { $0 == "/" || $0 == " " }).map(String.init)
-        guard let first = pieces.first, let ip = IPv4Address(first) else { throw SubnetError.badAddress }
+        guard let first = pieces.first, let ip = IPv4(first) else { throw SubnetError.badAddress }
         guard pieces.count == 2 else { throw SubnetError.badPrefix }
         if let p = Int(pieces[1]) {
             try self.init(address: ip, prefix: p)
-        } else if let mask = IPv4Address(pieces[1]) {
+        } else if let mask = IPv4(pieces[1]) {
             try self.init(address: ip, mask: mask)
         } else {
             throw SubnetError.badPrefix
         }
     }
 
-    public init(address: IPv4Address, mask: IPv4Address) throws {
+    public init(address: IPv4, mask: IPv4) throws {
         let ones = mask.value.nonzeroBitCount
         let expected: UInt32 = ones == 0 ? 0 : UInt32.max << UInt32(32 - ones)
         guard mask.value == expected else { throw SubnetError.nonContiguousMask }
         try self.init(address: address, prefix: ones)
     }
 
-    public var mask: IPv4Address { IPv4Address(prefix == 0 ? 0 : UInt32.max << UInt32(32 - prefix)) }
-    public var network: IPv4Address { IPv4Address(address.value & mask.value) }
-    public var broadcast: IPv4Address { IPv4Address(network.value | ~mask.value) }
+    public var mask: IPv4 { IPv4(prefix == 0 ? 0 : UInt32.max << UInt32(32 - prefix)) }
+    public var network: IPv4 { IPv4(address.value & mask.value) }
+    public var broadcast: IPv4 { IPv4(network.value | ~mask.value) }
 
     /// Usable hosts: /31 and /32 follow RFC 3021 (both addresses usable / single host).
     public var hostCount: UInt64 {
@@ -78,18 +78,18 @@ public struct Subnet: Equatable, Sendable {
         }
     }
 
-    public var firstHost: IPv4Address { prefix >= 31 ? network : IPv4Address(network.value + 1) }
-    public var lastHost: IPv4Address { prefix >= 31 ? broadcast : IPv4Address(broadcast.value - 1) }
+    public var firstHost: IPv4 { prefix >= 31 ? network : IPv4(network.value + 1) }
+    public var lastHost: IPv4 { prefix >= 31 ? broadcast : IPv4(broadcast.value - 1) }
 
-    public func contains(_ ip: IPv4Address) -> Bool { ip.value & mask.value == network.value }
+    public func contains(_ ip: IPv4) -> Bool { ip.value & mask.value == network.value }
 
     /// Hosts to probe on a LAN, skipping ourselves. Refuses networks larger than [limit] hosts.
-    public func sweepTargets(excluding me: IPv4Address? = nil, limit: Int = 1024) -> [IPv4Address] {
+    public func sweepTargets(excluding me: IPv4? = nil, limit: Int = 1024) -> [IPv4] {
         guard hostCount <= UInt64(limit) else { return [] }
-        var out: [IPv4Address] = []
+        var out: [IPv4] = []
         var v = firstHost.value
         while v <= lastHost.value {
-            if v != me?.value { out.append(IPv4Address(v)) }
+            if v != me?.value { out.append(IPv4(v)) }
             if v == UInt32.max { break }
             v += 1
         }
@@ -152,7 +152,7 @@ public enum HostInput {
     public static func isValid(_ text: String) -> Bool {
         let t = text.trimmingCharacters(in: .whitespaces)
         guard !t.isEmpty, t.count <= 253 else { return false }
-        if IPv4Address(t) != nil { return true }
+        if IPv4(t) != nil { return true }
         if t.contains(":") { return t.allSatisfy { $0.isHexDigit || $0 == ":" || $0 == "." } }
         let labels = t.split(separator: ".", omittingEmptySubsequences: false)
         if labels.allSatisfy({ $0.allSatisfy(\.isNumber) }) { return false }

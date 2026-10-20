@@ -86,13 +86,13 @@ final class ChannelsTests: XCTestCase {
 
 final class NetworkTests: XCTestCase {
     func testIPv4Parsing() {
-        XCTAssertEqual(IPv4Address("192.168.1.10")?.description, "192.168.1.10")
-        XCTAssertEqual(IPv4Address(" 10.0.0.1 ")?.value, 0x0A00_0001)
+        XCTAssertEqual(IPv4("192.168.1.10")?.description, "192.168.1.10")
+        XCTAssertEqual(IPv4(" 10.0.0.1 ")?.value, 0x0A00_0001)
         for bad in ["", "1.2.3", "1.2.3.4.5", "256.1.1.1", "a.b.c.d", "+1.2.3.4", "1..2.3", "1.2.3.4 ", "01234.1.1.1", "１.2.3.4"] where bad != "1.2.3.4 " {
-            XCTAssertNil(IPv4Address(bad), bad)
+            XCTAssertNil(IPv4(bad), bad)
         }
-        XCTAssertTrue(IPv4Address("172.20.1.1")!.isPrivate)
-        XCTAssertFalse(IPv4Address("8.8.8.8")!.isPrivate)
+        XCTAssertTrue(IPv4("172.20.1.1")!.isPrivate)
+        XCTAssertFalse(IPv4("8.8.8.8")!.isPrivate)
     }
 
     func testSubnet24() throws {
@@ -103,11 +103,11 @@ final class NetworkTests: XCTestCase {
         XCTAssertEqual(s.hostCount, 254)
         XCTAssertEqual(s.firstHost.description, "192.168.1.1")
         XCTAssertEqual(s.lastHost.description, "192.168.1.254")
-        XCTAssertTrue(s.contains(IPv4Address("192.168.1.200")!))
-        XCTAssertFalse(s.contains(IPv4Address("192.168.2.1")!))
-        let targets = s.sweepTargets(excluding: IPv4Address("192.168.1.105"))
+        XCTAssertTrue(s.contains(IPv4("192.168.1.200")!))
+        XCTAssertFalse(s.contains(IPv4("192.168.2.1")!))
+        let targets = s.sweepTargets(excluding: IPv4("192.168.1.105"))
         XCTAssertEqual(targets.count, 253)
-        XCTAssertFalse(targets.contains(IPv4Address("192.168.1.105")!))
+        XCTAssertFalse(targets.contains(IPv4("192.168.1.105")!))
     }
 
     func testMaskForm() throws {

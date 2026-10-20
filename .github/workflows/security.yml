@@ -55,8 +55,10 @@ jobs:
           import json, sys
           d = json.load(sys.stdin)['devices']
           phones = [(rt, x) for rt, xs in d.items() if 'iOS' in rt for x in xs if x['name'].startswith('iPhone')]
-          phones.sort(key=lambda p: p[0])
-          print(phones[-1][1]['udid'])")
+          newest = max(rt for rt, _ in phones)
+          latest = [x for rt, x in phones if rt == newest]
+          best = [x for x in latest if 'Pro Max' in x['name']] or latest
+          print(sorted(best, key=lambda x: x['name'])[-1]['udid'])")
           echo "SIM_UDID=$UDID" >> "$GITHUB_ENV"
           xcrun simctl list devices available | grep "$UDID" | tee build/simulator.log
       - name: Unit and UI tests on the simulator

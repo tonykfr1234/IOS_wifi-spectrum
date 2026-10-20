@@ -58,7 +58,7 @@ final class ConnectionModel: ObservableObject {
         }
         let i = await services.wifi.interface()
         interface = i
-        if let ip = i.ipv4.flatMap(IPv4Address.init), let mask = i.netmask.flatMap(IPv4Address.init) {
+        if let ip = i.ipv4.flatMap(IPv4.init), let mask = i.netmask.flatMap(IPv4.init) {
             subnet = try? Subnet(address: ip, mask: mask)
         } else {
             subnet = nil
@@ -151,7 +151,7 @@ final class LANModel: ObservableObject {
             guard let self else { return }
             defer { scanning = false }
             let i = await services.wifi.interface()
-            guard i.isWifi, let ip = i.ipv4.flatMap(IPv4Address.init), let mask = i.netmask.flatMap(IPv4Address.init),
+            guard i.isWifi, let ip = i.ipv4.flatMap(IPv4.init), let mask = i.netmask.flatMap(IPv4.init),
                   let subnet = try? Subnet(address: ip, mask: mask) else {
                 message = "沒有連上 Wi-Fi，無法掃描區域網路。"
                 return

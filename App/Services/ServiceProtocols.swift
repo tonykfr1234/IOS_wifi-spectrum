@@ -60,7 +60,7 @@ protocol LatencyProbing {
 }
 
 struct LANHost: Equatable, Identifiable {
-    var address: IPv4Address
+    var address: IPv4
     var openPorts: [UInt16]
     var id: UInt32 { address.value }
 }
@@ -73,7 +73,7 @@ struct BonjourService: Equatable, Identifiable, Hashable {
 
 protocol LANScanning {
     func browse(types: [String], for seconds: TimeInterval) async -> [BonjourService]
-    func sweep(targets: [IPv4Address], ports: [UInt16], timeout: TimeInterval, progress: @escaping @MainActor (Int) -> Void) async -> [LANHost]
+    func sweep(targets: [IPv4], ports: [UInt16], timeout: TimeInterval, progress: @escaping @MainActor (Int) -> Void) async -> [LANHost]
 }
 
 struct DNSAnswer: Equatable {
