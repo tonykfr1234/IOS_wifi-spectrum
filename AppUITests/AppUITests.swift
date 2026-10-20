@@ -48,7 +48,7 @@ final class AppUITests: XCTestCase {
         button.tap()
         let done = app.staticTexts["speedPhase"]
         XCTAssertTrue(done.waitForExistence(timeout: 5))
-        let finished = NSPredicate(format: "label == '完成 · 下載'")
+        let finished = NSPredicate(format: "label == '完成 · 下載速度'")
         expectation(for: finished, evaluatedWith: done)
         waitForExpectations(timeout: 30)
         XCTAssertEqual(app.staticTexts["gaugeValue"].label, "452")
