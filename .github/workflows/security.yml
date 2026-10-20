@@ -1,0 +1,102 @@
+name: Security Scan
+
+on:
+  push:
+    branches-ignore: [ci-artifacts]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  secret-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Scan repository for secrets, signing material and private files
+        run: python scripts/security_scan.py .
+      - name: Compile Python scripts
+        run: python -m py_compile scripts/*.py
+      - name: Verify SHA256SUMS.txt
+        run: python scripts/update_checksums.py --check
+
+  core-tests-linux:
+    runs-on: ubuntu-latest
+    container: swift:6.1-noble
+    steps:
+      - uses: actions/checkout@v4
+      - name: Channel, subnet, measurement and vendor tests
+        run: swift test --package-path Core
+
+  ios:
+    runs-on: macos-15
+    timeout-minutes: 60
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install XcodeGen and xcbeautify
+        run: brew install xcodegen xcbeautify
+      - name: Show toolchain
+        run: |
+          mkdir -p build
+          xcodebuild -version | tee build/toolchain.log
+          swift --version | tee -a build/toolchain.log
+      - name: Core tests on macOS
+        run: swift test --package-path Core 2>&1 | tee build/core-tests.log
+      - name: Generate Xcode project
+        run: xcodegen generate
+      - name: Pick an iPhone simulator
+        run: |
+          UDID=$(xcrun simctl list devices available -j | python3 -c "
+          import json, sys
+          d = json.load(sys.stdin)['devices']
+          phones = [(rt, x) for rt, xs in d.items() if 'iOS' in rt for x in xs if x['name'].startswith('iPhone')]
+          phones.sort(key=lambda p: p[0])
+          print(phones[-1][1]['udid'])")
+          echo "SIM_UDID=$UDID" >> "$GITHUB_ENV"
+          xcrun simctl list devices available | grep "$UDID" | tee build/simulator.log
+      - name: Unit and UI tests on the simulator
+        env:
+          TEST_RUNNER_SCREENSHOT_DIR: ${{ github.workspace }}/build/screenshots
+        run: |
+          set -o pipefail
+          xcodebuild test -project WifiSpectrum.xcodeproj -scheme WifiSpectrum \
+            -destination "id=$SIM_UDID" -resultBundlePath build/Test.xcresult \
+            CODE_SIGNING_ALLOWED=NO 2>&1 | tee build/test.log | xcbeautify --renderer github-actions
+      - name: Build for device without signing
+        run: |
+          set -o pipefail
+          xcodebuild build -project WifiSpectrum.xcodeproj -scheme WifiSpectrum -configuration Release \
+            -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED=NO 2>&1 | tee build/device-build.log | xcbeautify --renderer github-actions
+      - name: Summarise results
+        if: always()
+        run: |
+          xcrun xcresulttool get test-results summary --path build/Test.xcresult --compact > build/test-summary.json 2>/dev/null || true
+          python3 scripts/ci_report.py build | tee -a "$GITHUB_STEP_SUMMARY"
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-test-results
+          path: |
+            build/*.log
+            build/test-summary.json
+            build/screenshots/
+      - name: Publish report to the ci-artifacts branch
+        if: always() && github.event_name == 'push'
+        run: |
+          mkdir -p report
+          cp -R build/screenshots report/ 2>/dev/null || true
+          cp build/*.log build/test-summary.json report/ 2>/dev/null || true
+          for f in report/*.log; do tail -n 3000 "$f" > "$f.tmp" && mv "$f.tmp" "$f"; done
+          python3 scripts/ci_report.py build > report/SUMMARY.md || true
+          echo "${GITHUB_SHA}" > report/COMMIT
+          cd report
+          git init -q -b ci-artifacts
+          git add -A
+          git -c user.name="ci-report" -c user.email="ci-report@users.noreply.github.com" commit -q -m "CI report for ${GITHUB_SHA}"
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" ci-artifacts
