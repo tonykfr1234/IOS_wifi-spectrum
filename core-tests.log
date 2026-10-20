@@ -1,0 +1,86 @@
+Building for debugging...
+[0/8] /Users/runner/work/IOS_wifi-spectrum/IOS_wifi-spectrum/Core/.build/arm64-apple-macosx/debug/WifiSpectrumCorePackageTests.derived/runner.swift
+[0/8] Copying oui.tsv
+[2/8] Write sources
+[5/8] Write swift-version--79AA4F9932D1E87A.txt
+[7/13] Compiling WifiSpectrumCore Network.swift
+[8/13] Compiling WifiSpectrumCore Vendors.swift
+[9/13] Emitting module WifiSpectrumCore
+[10/13] Compiling WifiSpectrumCore Channels.swift
+[11/13] Compiling WifiSpectrumCore Measurements.swift
+[12/14] Compiling WifiSpectrumCore resource_bundle_accessor.swift
+[13/16] Compiling WifiSpectrumCoreTests CoreTests.swift
+[14/16] Emitting module WifiSpectrumCoreTests
+[15/18] Compiling WifiSpectrumCorePackageTests runner.swift
+[16/18] Emitting module WifiSpectrumCorePackageTests
+[16/18] Write Objects.LinkFileList
+[17/18] Linking WifiSpectrumCorePackageTests
+Build complete! (34.56s)
+Test Suite 'All tests' started at 2026-10-20 21:29:41.624.
+Test Suite 'WifiSpectrumCorePackageTests.xctest' started at 2026-10-20 21:29:41.627.
+Test Suite 'ChannelsTests' started at 2026-10-20 21:29:41.627.
+Test Case '-[WifiSpectrumCoreTests.ChannelsTests testChannelNumbers]' started.
+Test Case '-[WifiSpectrumCoreTests.ChannelsTests testChannelNumbers]' passed (0.005 seconds).
+Test Case '-[WifiSpectrumCoreTests.ChannelsTests testEveryPlanContainsPrimaryAndHasRightWidth]' started.
+Test Case '-[WifiSpectrumCoreTests.ChannelsTests testEveryPlanContainsPrimaryAndHasRightWidth]' passed (0.021 seconds).
+Test Case '-[WifiSpectrumCoreTests.ChannelsTests testInvalidPlans]' started.
+Test Case '-[WifiSpectrumCoreTests.ChannelsTests testInvalidPlans]' passed (0.001 seconds).
+Test Case '-[WifiSpectrumCoreTests.ChannelsTests testPlansMatchAndroid]' started.
+Test Case '-[WifiSpectrumCoreTests.ChannelsTests testPlansMatchAndroid]' passed (0.001 seconds).
+Test Case '-[WifiSpectrumCoreTests.ChannelsTests testPSC]' started.
+Test Case '-[WifiSpectrumCoreTests.ChannelsTests testPSC]' passed (0.000 seconds).
+Test Case '-[WifiSpectrumCoreTests.ChannelsTests testRoundTripEveryCandidate]' started.
+Test Case '-[WifiSpectrumCoreTests.ChannelsTests testRoundTripEveryCandidate]' passed (0.001 seconds).
+Test Case '-[WifiSpectrumCoreTests.ChannelsTests testUNII]' started.
+Test Case '-[WifiSpectrumCoreTests.ChannelsTests testUNII]' passed (0.000 seconds).
+Test Suite 'ChannelsTests' passed at 2026-10-20 21:29:41.656.
+	 Executed 7 tests, with 0 failures (0 unexpected) in 0.028 (0.029) seconds
+Test Suite 'MeasurementTests' started at 2026-10-20 21:29:41.656.
+Test Case '-[WifiSpectrumCoreTests.MeasurementTests testLatencyStats]' started.
+Test Case '-[WifiSpectrumCoreTests.MeasurementTests testLatencyStats]' passed (0.001 seconds).
+Test Case '-[WifiSpectrumCoreTests.MeasurementTests testSecurityLabels]' started.
+Test Case '-[WifiSpectrumCoreTests.MeasurementTests testSecurityLabels]' passed (0.000 seconds).
+Test Case '-[WifiSpectrumCoreTests.MeasurementTests testThroughput]' started.
+Test Case '-[WifiSpectrumCoreTests.MeasurementTests testThroughput]' passed (0.001 seconds).
+Test Suite 'MeasurementTests' passed at 2026-10-20 21:29:41.659.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.002 (0.002) seconds
+Test Suite 'NetworkTests' started at 2026-10-20 21:29:41.659.
+Test Case '-[WifiSpectrumCoreTests.NetworkTests testEdgePrefixes]' started.
+Test Case '-[WifiSpectrumCoreTests.NetworkTests testEdgePrefixes]' passed (0.002 seconds).
+Test Case '-[WifiSpectrumCoreTests.NetworkTests testHostInput]' started.
+Test Case '-[WifiSpectrumCoreTests.NetworkTests testHostInput]' passed (0.000 seconds).
+Test Case '-[WifiSpectrumCoreTests.NetworkTests testIPv4Parsing]' started.
+Test Case '-[WifiSpectrumCoreTests.NetworkTests testIPv4Parsing]' passed (0.000 seconds).
+Test Case '-[WifiSpectrumCoreTests.NetworkTests testMaskForm]' started.
+Test Case '-[WifiSpectrumCoreTests.NetworkTests testMaskForm]' passed (0.000 seconds).
+Test Case '-[WifiSpectrumCoreTests.NetworkTests testPorts]' started.
+Test Case '-[WifiSpectrumCoreTests.NetworkTests testPorts]' passed (0.002 seconds).
+Test Case '-[WifiSpectrumCoreTests.NetworkTests testSubnet24]' started.
+Test Case '-[WifiSpectrumCoreTests.NetworkTests testSubnet24]' passed (0.000 seconds).
+Test Suite 'NetworkTests' passed at 2026-10-20 21:29:41.664.
+	 Executed 6 tests, with 0 failures (0 unexpected) in 0.005 (0.005) seconds
+Test Suite 'VendorTests' started at 2026-10-20 21:29:41.664.
+Test Case '-[WifiSpectrumCoreTests.VendorTests testBundledRegistryLoads]' started.
+Test Case '-[WifiSpectrumCoreTests.VendorTests testBundledRegistryLoads]' passed (0.419 seconds).
+Test Case '-[WifiSpectrumCoreTests.VendorTests testGarbage]' started.
+Test Case '-[WifiSpectrumCoreTests.VendorTests testGarbage]' passed (0.000 seconds).
+Test Case '-[WifiSpectrumCoreTests.VendorTests testKnownVendor]' started.
+Test Case '-[WifiSpectrumCoreTests.VendorTests testKnownVendor]' passed (0.000 seconds).
+Test Case '-[WifiSpectrumCoreTests.VendorTests testLookupFuzz]' started.
+Test Case '-[WifiSpectrumCoreTests.VendorTests testLookupFuzz]' passed (0.267 seconds).
+Test Case '-[WifiSpectrumCoreTests.VendorTests testPadding]' started.
+Test Case '-[WifiSpectrumCoreTests.VendorTests testPadding]' passed (0.000 seconds).
+Test Case '-[WifiSpectrumCoreTests.VendorTests testRandomizedMac]' started.
+Test Case '-[WifiSpectrumCoreTests.VendorTests testRandomizedMac]' passed (0.000 seconds).
+Test Case '-[WifiSpectrumCoreTests.VendorTests testUnpaddedIOSBssid]' started.
+Test Case '-[WifiSpectrumCoreTests.VendorTests testUnpaddedIOSBssid]' passed (0.000 seconds).
+Test Suite 'VendorTests' passed at 2026-10-20 21:29:42.351.
+	 Executed 7 tests, with 0 failures (0 unexpected) in 0.687 (0.687) seconds
+Test Suite 'WifiSpectrumCorePackageTests.xctest' passed at 2026-10-20 21:29:42.351.
+	 Executed 23 tests, with 0 failures (0 unexpected) in 0.722 (0.724) seconds
+Test Suite 'All tests' passed at 2026-10-20 21:29:42.351.
+	 Executed 23 tests, with 0 failures (0 unexpected) in 0.722 (0.726) seconds
+◇ Test run started.
+↳ Testing Library Version: 124.4
+↳ Target Platform: arm64e-apple-macos14.0
+✔ Test run with 0 tests passed after 0.001 seconds.
