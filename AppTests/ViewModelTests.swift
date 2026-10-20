@@ -108,7 +108,7 @@ final class ViewModelTests: XCTestCase {
         XCTAssertFalse(m.scanning)
         XCTAssertEqual(m.total, 253)
         XCTAssertEqual(m.progress, 253)
-        XCTAssertEqual(m.hosts.map(\.address.description), ["192.168.50.1", "192.168.50.10", "192.168.50.23", "192.168.50.66", "192.168.50.88"])
+        XCTAssertEqual(m.hosts.map(\.address.description), ["192.168.50.1", "192.168.50.10", "192.168.50.23", "192.168.50.66", "192.168.50.88", "192.168.50.105"])
         XCTAssertEqual(m.bonjour.count, 5)
         XCTAssertEqual(m.subnetText, "192.168.50.0/24")
     }
