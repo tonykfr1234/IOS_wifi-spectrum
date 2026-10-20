@@ -6,7 +6,7 @@ import NetworkExtension
 import WifiSpectrumCore
 
 /// Resumes a continuation exactly once even when several callbacks race (ready, failure, timeout).
-final class OnceBox<T> {
+final class OnceBox<T>: @unchecked Sendable {
     private var continuation: CheckedContinuation<T, Never>?
     private let lock = NSLock()
 
@@ -64,7 +64,7 @@ final class SystemWifiInfo: NSObject, WifiInfoProviding, CLLocationManagerDelega
     }
 
     func interface() async -> InterfaceSnapshot {
-        let path: NWPath = await withCheckedContinuation { c in
+        let path: Network.NWPath = await withCheckedContinuation { c in
             let monitor = NWPathMonitor()
             let box = OnceBox(c)
             monitor.pathUpdateHandler = { p in
@@ -146,6 +146,11 @@ struct TCPLatencyProbe: LatencyProbing {
 
 // MARK: - LAN discovery
 
+/// Every NWBrowser handler runs on one serial queue, so the set is never touched concurrently.
+private final class FoundServices: @unchecked Sendable {
+    var items = Set<BonjourService>()
+}
+
 struct SystemLANScanner: LANScanning {
     let probe = TCPLatencyProbe()
 
@@ -153,21 +158,20 @@ struct SystemLANScanner: LANScanning {
         await withCheckedContinuation { c in
             let box = OnceBox<[BonjourService]>(c)
             let queue = DispatchQueue(label: "bonjour")
-            var found = Set<BonjourService>()
-            var browsers: [NWBrowser] = []
-            for type in types {
+            let found = FoundServices()
+            let browsers = types.map { type -> NWBrowser in
                 let browser = NWBrowser(for: .bonjour(type: type, domain: nil), using: .tcp)
                 browser.browseResultsChangedHandler = { results, _ in
                     for r in results {
-                        if case let .service(name, t, _, _) = r.endpoint { found.insert(BonjourService(name: name, type: t)) }
+                        if case let .service(name, t, _, _) = r.endpoint { found.items.insert(BonjourService(name: name, type: t)) }
                     }
                 }
                 browser.start(queue: queue)
-                browsers.append(browser)
+                return browser
             }
             queue.asyncAfter(deadline: .now() + seconds) {
                 browsers.forEach { $0.cancel() }
-                box.resume(found.sorted { ($0.name, $0.type) < ($1.name, $1.type) })
+                box.resume(found.items.sorted { ($0.name, $0.type) < ($1.name, $1.type) })
             }
         }
     }

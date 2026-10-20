@@ -8,7 +8,7 @@ e145d85c7a043ad278c5dd70558a69a533a7bc5528b61ff1d98ac3b0fa561092  ./App/Models/V
 a331d51864743ebe4e00dd22360b4a538b6b3ac26a6b3eb54094e60a36959a12  ./App/PrivacyInfo.xcprivacy
 27957f17ffd188aea32cbd7a482df8721cfd8d9abb4c926b86af1ce5a52c79ec  ./App/Services/DemoServices.swift
 d29b2df0f225365ebdc9659d1fb529964ddba00a8b341be046a8f9fab4ee8ed5  ./App/Services/ServiceProtocols.swift
-94efc35e0f24052fbcd4c5b49986f8f2b0c4f01d093b37569e3e1d32e64b95ea  ./App/Services/SystemServices.swift
+cb5a14eed771c6c45cc488cc03328c0ba86e7a71dcda9b8fd2000765675b9600  ./App/Services/SystemServices.swift
 09a8639c6c565f4765980ec43c93d0c1a5f48efc06eedce848d9379080edeb4a  ./App/Views/AboutView.swift
 ad2c148e31bedec70eb93b1f21642f70c03857e79dae12b1ce7b9f19b2f4d8f5  ./App/Views/ConnectionView.swift
 d43a4d0803d55dd61e4423a2d85cdf76bec156eaa56be9cfc55b508da99f6bde  ./App/Views/LANView.swift
