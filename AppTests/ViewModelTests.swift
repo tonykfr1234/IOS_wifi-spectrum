@@ -190,6 +190,17 @@ final class ViewModelTests: XCTestCase {
         XCTAssertEqual(m.rows.map(\.port), Ports.common.sorted())
     }
 
+    func testDemoPortScanOnlyShowsRealisticPorts() async {
+        let m = PortScanModel(services: services())
+        m.start()
+        await m.waitUntilFinished()
+        XCTAssertEqual(m.openRows.map(\.port), [53, 80, 443])
+        m.host = "192.168.50.10"
+        m.start()
+        await m.waitUntilFinished()
+        XCTAssertEqual(m.openRows.map(\.port), [22, 80, 443, 445])
+    }
+
     func testPortScanAllClosed() async {
         let m = PortScanModel(services: services { $0.latency = SilentLatency() })
         m.portsText = "8000-8019"

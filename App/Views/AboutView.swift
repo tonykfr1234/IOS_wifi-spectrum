@@ -3,6 +3,8 @@ import SwiftUI
 struct AboutView: View {
     @Binding var demoMode: Bool
     var isDemo: Bool
+    /// True when the demo was forced by a launch argument, so the switch cannot turn it off.
+    var locked = false
 
     private var version: String {
         let v = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
@@ -14,7 +16,7 @@ struct AboutView: View {
         NavigationStack {
             Form {
                 Section {
-                    Toggle("示範模式", isOn: $demoMode).accessibilityIdentifier("demoToggle")
+                    Toggle("示範模式", isOn: $demoMode).disabled(locked).accessibilityIdentifier("demoToggle")
                 } footer: {
                     Text(isDemo ? "目前顯示模擬資料：一間有 Wi-Fi 7 路由器的台北公寓。" : "沒有 Wi-Fi 或想先看介面時，可以開啟示範模式。")
                 }

@@ -9,6 +9,16 @@ enum DemoData {
         ipv4: "192.168.50.123", netmask: "255.255.255.0", ipv6: ["fe80::1c2a:5bff:fe3d:9a10", "2001:db8:50::7b"],
         isWifi: true, isExpensive: false, isConstrained: false, supportsIPv6: true, hasDNS: true
     )
+    /// Which ports answer in the demo: the known LAN hosts expose their own ports, any other
+    /// private address behaves like a home router, and public hosts only serve the web.
+    static func isOpen(host: String, port: UInt16) -> Bool {
+        if let ip = IPv4(host), let known = hosts.first(where: { $0.address == ip }) {
+            return known.openPorts.contains(port) || (ip.description.hasSuffix(".1") && port == 53)
+        }
+        if host.hasPrefix("192.168.") || host.hasPrefix("10.") { return [53, 80, 443].contains(port) }
+        return [80, 443].contains(port)
+    }
+
     static let hosts: [LANHost] = [
         LANHost(address: IPv4("192.168.50.1")!, openPorts: [80, 443]),
         LANHost(address: IPv4("192.168.50.10")!, openPorts: [80, 443, 22, 445]),
@@ -57,6 +67,7 @@ struct DemoSpeedTest: SpeedTesting {
 struct DemoLatencyProbe: LatencyProbing {
     func connectTime(host: String, port: UInt16, timeout: TimeInterval) async -> Double? {
         if host.hasSuffix(".invalid") { return nil }
+        guard DemoData.isOpen(host: host, port: port) else { return nil }
         let base = host.hasPrefix("192.168.") ? 2.0 : (host.contains("apple") ? 9.5 : 6.0)
         return base + Double(abs(host.hashValue % 7)) / 10 + Double.random(in: 0...1.2)
     }

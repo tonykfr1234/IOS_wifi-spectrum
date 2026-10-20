@@ -79,7 +79,8 @@ struct MainTabs: View {
                 .tabItem { Label("區網", systemImage: "network") }
             ToolsView(services: services)
                 .tabItem { Label("工具", systemImage: "wrench.and.screwdriver") }
-            AboutView(demoMode: $demoMode, isDemo: services.isDemo)
+            AboutView(demoMode: Binding(get: { demoMode || AppEnvironment.forcedDemo }, set: { demoMode = $0 }),
+                      isDemo: services.isDemo, locked: AppEnvironment.forcedDemo)
                 .tabItem { Label("關於", systemImage: "info.circle") }
         }
     }

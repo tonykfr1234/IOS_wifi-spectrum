@@ -38,7 +38,7 @@ struct SpeedTestView: View {
         case .latency: return "正在測量延遲…"
         case .download: return "下載中"
         case .upload: return "上傳中"
-        case .done: return "完成 · 下載"
+        case .done: return "完成 · 下載速度"
         case .failed: return "測速失敗"
         case .cancelled: return "已取消"
         }

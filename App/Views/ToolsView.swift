@@ -245,7 +245,7 @@ struct PortScanView: View {
                 Section("開啟 \(model.openRows.count) · 未回應 \(model.rows.count - model.openRows.count)") {
                     ForEach(model.openRows) { r in
                         HStack {
-                            Text("\(r.port)").font(.system(.body, design: .monospaced))
+                            Text(verbatim: String(r.port)).font(.system(.body, design: .monospaced))
                             Text(Ports.service(r.port)).foregroundStyle(Palette.text2)
                             Spacer()
                             Tag(text: "開啟", color: Palette.good)

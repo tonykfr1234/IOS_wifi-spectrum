@@ -103,13 +103,15 @@ final class AppUITests: XCTestCase {
         app.navigationBars.buttons.element(boundBy: 0).tap()
         app.buttons["tool-ports"].tap()
         app.buttons["portButton"].tap()
-        XCTAssertTrue(any(containing: "開啟 19").waitForExistence(timeout: 20))
+        XCTAssertTrue(any(containing: "開啟 3").waitForExistence(timeout: 20))
+        XCTAssertFalse(any(containing: "3,389").exists)
         shot("08_ports")
     }
 
     func test07AboutAndRapidTabSwitching() {
         tab("關於")
         XCTAssertTrue(app.switches["demoToggle"].waitForExistence(timeout: 5))
+        XCTAssertEqual(app.switches["demoToggle"].value as? String, "1")
         shot("09_about")
         for _ in 0..<15 {
             for t in ["連線", "測速", "區網", "工具", "關於"] { tab(t) }
